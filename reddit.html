@@ -1,0 +1,128 @@
+<div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="col-sm-3" <a class="navbar-brand" href="#">
+                <strong> BRAND.. </strong>
+                </a>
+            </div>
+            <div class="col-sm-3">
+                <form class="" role="search">
+                    <div class="form-group">
+                        <input type="text" ng-model="search.title" class="form-control" placeholder="Search">
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-3">
+
+                <select ng-model="$ctrl.orderBy" name="sortBy">
+            <option value="-votes">Sort by votes</option>
+            <option value="title">Sort by title</option>
+            <option value="-date">Sort by date</option>
+          </select>
+                <br><br>
+            </div>
+
+            <div class="navbar-form navbar-right col-sm-3">
+                <button ng-click="$ctrl.click()"> Add new post </button>
+            </div>
+        </div>
+    </nav>
+</div>
+
+
+<div class="container">
+    <form class="form-horizontal blogForm" ng-show="$ctrl.toggleForm" ng-submit="$ctrl.addBlog()">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Title</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="$ctrl.blog.title" class="form-control" id="title" placeholder="title">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Body</label>
+            <div class="col-sm-10">
+                <input type="text" ng-model="$ctrl.blog.body" class="form-control" id="body" placeholder="body">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">Author</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="$ctrl.blog.author" class="form-control" id="author" placeholder="author">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label">URL</label>
+                <div class="col-sm-10">
+                    <input type="text" ng-model="$ctrl.blog.url" class="form-control" id="url" placeholder="Url">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </div>
+    </form>
+    </div>
+
+
+    <div class="container">
+        <div ng-repeat="blog in $ctrl.blogs | filter:search:strict | orderBy:$ctrl.orderBy">
+            <div class="row">
+                <div class="col-sm-3">
+                    <img src="{{blog.url}}" height="100" width="80"><img>
+                </div>
+                <div class="col-sm-6">
+                    <div>
+                        <strong><u>{{blog.title}}</u></strong>
+                    </div>
+                    <span class="glyphicon glyphicon-arrow-up" ng-click="$ctrl.upVotes(blog,1)"></span>
+
+                    <span class="glyphicon glyphicon-arrow-down" ng-click="$ctrl.downVotes(blog,1)"></span>
+
+                    <span>{{ blog.votes }}</span>
+                    <div>
+                        <strong>{{blog.body}}</strong>
+                        <br> created on : <em> {{blog.date | amCalendar:referenceTime:formats}} </em>|
+                        <span class="hoverable" ng-click="showComments=!showComments">
+            <span class="glyphicon glyphicon-comment"></span>
+                        <ng-pluralize count="blog.comments.length" when="{1: '1 comment', 'other': '{{ blog.comments.length }} comments'}"></ng-pluralize>
+                        </span> |
+                        <span class="hoverable" ng-click="toggleCommentForm = !toggleCommentForm">
+            <span class="glyphicon glyphicon-pencil"></span> Add comment
+                        </span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <strong>Author : {{blog.author}}</strong>
+                </div>
+            </div>
+
+            <div ng-repeat="comment in blog.comments" ng-show="showComments">
+                <div class="row">
+                    <div>
+                        <strong><u>{{comment}}</u></strong>
+                    </div>
+                </div>
+                <hr>
+            </div>
+
+
+            <div>
+                <form class="form-horizontal commentForm" ng-show="toggleCommentForm" ng-submit="$ctrl.addNewComment(blog, newComment); toggleCommentForm = false">
+                    <div class="form-group">
+                        <div class="col-sm-6">
+                            <input type="text" ng-model="newComment" class="form-control" id="comment" placeholder="comment">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-6">
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr>
+        </div>
+    </div>
